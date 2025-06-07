@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app/components/auth_alert_dialog.dart';
+import 'package:app/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,12 +17,12 @@ class _SignUpPageState extends State<SignUpPage> {
   final useremailcontorller = TextEditingController();
   final userpasswordcontrolller = TextEditingController();
 
-  Future<void> AuthRequest(
+  Future<void> CreateUserRequest(
     String username,
     String email,
     String password,
   ) async {
-    const String url = "http://10.0.2.2:3000/Play-T/register-user";
+    const String url = "http://10.0.2.2:3000/Play-T/auth/create-user";
 
     final response = await http.post(
       Uri.parse(url),
@@ -33,8 +35,22 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     if (response.statusCode == 201) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
       print("successfully registerd");
-    } else {
+    } else if (response.statusCode == 409) {
+      print("user already exists with this email");
+      showAlertDialog(
+        context,
+        "User Already Exists with this username or email",
+      );
+    } else if (response.statusCode == 400) {
+      print("invalid details ");
+    } else if (response.statusCode == 500) {
+      print("server is down");
+
       print("failed registration try again");
     }
   }
@@ -77,7 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(height: 60),
               ElevatedButton(
                 onPressed: () {
-                  AuthRequest(
+                  CreateUserRequest(
                     usernamecontroller.text,
                     useremailcontorller.text,
                     userpasswordcontrolller.text,

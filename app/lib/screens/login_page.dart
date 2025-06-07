@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:app/screens/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -22,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
     setState(() => isLoading = true);
 
-    const String url = "http://10.0.2.2:3000/Play-T/login-user";
+    const String url = "http://10.0.2.2:3000/Play-T/auth/login-user";
 
     try {
       final response = await http.post(
@@ -33,10 +35,26 @@ class _LoginPageState extends State<LoginPage> {
 
       setState(() => isLoading = false);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
+        // final accesstoken = jsonDecode(response.body)['token'];
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setString('accesstoken', accesstoken);
+        // print("login token is : $accesstoken");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
         showMessage("Successfully logged in!");
-      } else {
-        showMessage("Login failed. Please check your credentials.");
+      }
+      // else if (response.statusCode == 400) {
+      //   print("missing fields");
+      // }
+      else if (response.statusCode == 404) {
+        print("user not found with that username");
+      } else if (response.statusCode == 401) {
+        print("wrong password");
+      } else if (response.statusCode == 500) {
+        print("server is down");
       }
     } catch (e) {
       setState(() => isLoading = false);

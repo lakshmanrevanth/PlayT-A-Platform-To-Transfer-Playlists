@@ -1,6 +1,5 @@
 require("dotenv").config();
 const User = require("../models/auth_model");
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -8,10 +7,25 @@ const registerUserController = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
+    if (!username || !email || !password) {
+      console.log("invalid details");
+      return res.status(400).json({
+        message: "invalid details or kindly check the details",
+      });
+    }
+
     const checkusername = await User.findOne({ username });
 
+    // const checkemail = await User.findOne({ email });
+
+    // if (checkemail) {
+    //   console.log("user email already exists");
+    //   return res.status(409).json({
+    //     message: "user email already registered with another user",
+    //   });
+    // }
     if (checkusername) {
-      res.status(401).json({
+      res.status(409).json({
         message: "user already exists...",
       });
     } else {
@@ -42,6 +56,10 @@ const registerUserController = async (req, res) => {
     // });
   } catch (e) {
     console.log(e);
+    console.log("server is down");
+    res.status(500).json({
+      message: "server is down",
+    });
   }
 };
 
@@ -60,20 +78,26 @@ const loginUserController = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const checkaccount = await User.findOne({ username });
+    if (!username || !password) {
+      return res.status(400).json({
+        message: "missing fields",
+      });
+    }
 
-    if (checkaccount) {
-      const comparepassword = await bcrypt.compare(
+    const account = await User.findOne({ username });
+
+    if (account) {
+      const ispasswordcorrect = await bcrypt.compare(
         password,
-        checkaccount.password
+        account.password
       );
 
-      if (comparepassword) {
+      if (ispasswordcorrect) {
         const accesstoken = jwt.sign(
           {
-            userId: checkaccount._id,
-            username: checkaccount.username,
-            email: checkaccount.email,
+            userId: account._id,
+            username: account.username,
+            email: account.email,
           },
           process.env.JWT_SECRET_KEY,
           {
@@ -82,21 +106,23 @@ const loginUserController = async (req, res) => {
         );
         console.log("success");
 
-        res.status(201).json({
+        res.status(200).json({
           token: accesstoken,
           message: "log in successfully...",
         });
       } else {
-        res.status(501).json({
+        res.status(401).json({
           message: "password wrong...",
         });
       }
     } else {
-      res.status(401).json({
+      res.status(404).json({
         message: "username not found try again with other username...",
       });
     }
   } catch (e) {
+    console.log("server down");
+    return res.status(500);
     console.log(e);
   }
 };
