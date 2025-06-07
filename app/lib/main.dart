@@ -1,3 +1,4 @@
+import 'package:app/screens/home_page.dart';
 import 'package:app/screens/login_page.dart';
 import 'package:app/screens/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LoginPage();
+    return HomePage();
   }
 }

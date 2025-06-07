@@ -1,0 +1,17 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+
+Future<void> SpotifyAuth() async {
+  try {
+    final result = await FlutterWebAuth2.authenticate(
+      url: "https://localhost:3000/transfer/api/spotify/auth",
+      callbackUrlScheme: "myapp",
+    );
+
+    final token = Uri.parse(result).queryParameters['token'];
+
+    print("spotify current user tocken : $token");
+  } catch (e) {
+    print(e);
+  }
+}
