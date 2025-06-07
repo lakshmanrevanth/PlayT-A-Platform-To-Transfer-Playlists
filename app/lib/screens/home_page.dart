@@ -16,7 +16,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(title: Text("Transfer Playlist")),
       body: Center(
         child: ElevatedButton(
-          onPressed: SpotifyAuth,
+          onPressed: () {
+            SpotifyAuth();
+          },
           child: Text("Select Source"),
         ),
       ),

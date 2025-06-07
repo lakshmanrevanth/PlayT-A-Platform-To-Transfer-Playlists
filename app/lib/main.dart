@@ -11,7 +11,6 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(title: "Play-T", home: Home());
   }
 }

@@ -2,30 +2,35 @@ const { default: axios } = require("axios");
 
 const initiateSpotifyAuth = (req, res) => {
   try {
+    console.log("initiate spotify auth is working");
     const clientid = "846dd3afac5c4528aa4697e638e1431b";
     const redirecturl =
-      "https://localhost:3000/transfer/api/spotify/auth/callback";
+      "https://completed-want-main-hall.trycloudflare.com/Play-T/transfer/api/spotify/auth/callback";
 
     const scope =
       "playlist-read-private playlist-read-collaborative user-read-private";
 
     const authurl =
       `https://accounts.spotify.com/authorize?` +
-      `response_type=code&client_id=${client_id}` +
+      `response_type=code&client_id=${clientid}` +
       `&scope=${encodeURIComponent(scope)}` +
-      `&redirect_uri=${encodeURIComponent(redirect_uri)}`;
+      `&redirect_uri=${encodeURIComponent(redirecturl)}`;
+    console.log("initiate spotify auth is completed");
 
     res.redirect(authurl);
+    console.log("res is initiated");
   } catch {
+    console.log("hello this funtion not working...");
     console.log(e);
   }
 };
 
 const handleSpotifyAuth = async (req, res) => {
+  console.log("handle function is initiated");
   const code = req.query.code;
 
-  const redirecturl =
-    "https://localhost:3000/transfer/api/spotify/auth/callback";
+  const redirect_uri =
+    "https://completed-want-main-hall.trycloudflare.com/Play-T/transfer/api/spotify/auth/callback";
 
   try {
     const response = await axios.post(
@@ -34,8 +39,8 @@ const handleSpotifyAuth = async (req, res) => {
         grant_type: "authorization_code",
         code,
         redirect_uri,
-        client_id: process.env.SPOTIFY_CLIENT_ID,
-        client_secret: process.env.SPOTIFY_CLIENT_SECRET,
+        client_id: "846dd3afac5c4528aa4697e638e1431b",
+        client_secret: "fdbdbe732c9d4d25a5ea1b64a9a7c8a7",
       }),
       {
         headers: {
@@ -44,11 +49,14 @@ const handleSpotifyAuth = async (req, res) => {
       }
     );
 
-    const { accesstoken } = response.data;
+    const { access_token } = response.data;
+
+    console.log(access_token);
 
     res.redirect(`myapp://auth/callback?token=${access_token}`);
-  } catch {
+  } catch (e) {
     console.log(e);
+    res.status(500).send("Error during Spotify authentication");
   }
 };
 
