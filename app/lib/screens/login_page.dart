@@ -40,9 +40,11 @@ class _LoginPageState extends State<LoginPage> {
         // final prefs = await SharedPreferences.getInstance();
         // await prefs.setString('accesstoken', accesstoken);
         // print("login token is : $accesstoken");
+
+        final username = jsonDecode(response.body)['username'];
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage(username: username)),
         );
         showMessage("Successfully logged in!");
       }
