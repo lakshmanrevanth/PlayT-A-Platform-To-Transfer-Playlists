@@ -5,7 +5,7 @@ const initiateSpotifyAuth = (req, res) => {
     console.log("initiate spotify auth is working");
     const clientid = "846dd3afac5c4528aa4697e638e1431b";
     const redirecturl =
-      "https://completed-want-main-hall.trycloudflare.com/Play-T/transfer/api/spotify/auth/callback";
+      "https://playt-a-platform-to-transfer-playlists.onrender.com/transfer/api/spotify/auth/callback";
 
     const scope =
       "playlist-read-private playlist-read-collaborative user-read-private";
@@ -30,7 +30,7 @@ const handleSpotifyAuth = async (req, res) => {
   const code = req.query.code;
 
   const redirect_uri =
-    "https://completed-want-main-hall.trycloudflare.com/Play-T/transfer/api/spotify/auth/callback";
+    "https://playt-a-platform-to-transfer-playlists.onrender.com/transfer/api/spotify/auth/callback";
 
   try {
     const response = await axios.post(

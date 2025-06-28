@@ -22,7 +22,8 @@ class _SignUpPageState extends State<SignUpPage> {
     String email,
     String password,
   ) async {
-    const String url = "http://10.0.2.2:3000/Play-T/auth/create-user";
+    const String url =
+        "https://playt-a-platform-to-transfer-playlists.onrender.com/Play-T/auth/create-user";
 
     final response = await http.post(
       Uri.parse(url),

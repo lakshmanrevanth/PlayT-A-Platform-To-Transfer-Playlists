@@ -5,7 +5,7 @@ Future<void> SpotifyAuth() async {
   try {
     final result = await FlutterWebAuth2.authenticate(
       url:
-          "https://completed-want-main-hall.trycloudflare.com/Play-T/transfer/api/spotify/auth",
+          "https://playt-a-platform-to-transfer-playlists.onrender.com/Play-T/transfer/api/spotify/auth",
       callbackUrlScheme: "myapp",
     );
 

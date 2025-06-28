@@ -24,7 +24,8 @@ class _LoginPageState extends State<LoginPage> {
 
     setState(() => isLoading = true);
 
-    const String url = "http://10.0.2.2:3000/Play-T/auth/login-user";
+    const String url =
+        "https://playt-a-platform-to-transfer-playlists.onrender.com/Play-T/auth/login-user";
 
     try {
       final response = await http.post(
