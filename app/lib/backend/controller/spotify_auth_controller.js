@@ -1,4 +1,6 @@
 const { default: axios } = require("axios");
+const { default: mongoose } = require("mongoose");
+const User = require("../models/auth_model");
 
 const initiateSpotifyAuth = (req, res) => {
   try {
@@ -49,18 +51,53 @@ const handleSpotifyAuth = async (req, res) => {
       }
     );
 
-    const { access_token } = response.data;
+    const { access_token, refresh_token, expiry_in } = response.data;
+
+    const expiryAt = new Date(Date.now() + expiry_in * 1000);
 
     console.log(access_token);
 
-    res.redirect(`myapp://auth/callback?token=${access_token}`);
+    res.redirect(
+      `myapp://auth/callback?accessToken=${access_token}&refreshToken=${refresh_token}&expiryAt=${expiryAt.toISOString()}`
+    );
   } catch (e) {
     console.log(e);
     res.status(500).send("Error during Spotify authentication");
   }
 };
 
+const saveTokenInDatabase = async (req, res) => {
+  try {
+    const { accessToken, refreshToken, expiryAt, username } = req.body;
+
+    const finduser = await User.findOne({ username });
+
+    if (!finduser) {
+      console.log("username does not exists");
+      res.status(404).json({
+        message: "user does not exists",
+      });
+    }
+    finduser.spotifytoken = {
+      accessToken,
+      refreshToken,
+      expiryAt: new Date(expiryAt),
+    };
+
+    await finduser.save();
+
+    console.log(finduser.spotifytoken);
+
+    res.status(200).json({
+      message: "successfully updated",
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 module.exports = {
   initiateSpotifyAuth,
   handleSpotifyAuth,
+  saveTokenInDatabase,
 };

@@ -36,9 +36,13 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     if (response.statusCode == 201) {
+      final responsedata = jsonDecode(response.body);
+
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(
+          builder: (context) => HomePage(username: responsedata['username']),
+        ),
       );
       print("successfully registerd");
     } else if (response.statusCode == 409) {

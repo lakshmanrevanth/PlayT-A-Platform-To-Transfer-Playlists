@@ -13,7 +13,6 @@ const registerUserController = async (req, res) => {
         message: "invalid details or kindly check the details",
       });
     }
-
     const checkusername = await User.findOne({ username });
 
     // const checkemail = await User.findOne({ email });
@@ -45,6 +44,7 @@ const registerUserController = async (req, res) => {
 
         res.status(201).json({
           message: "stored in database",
+          username: createuser.username,
         });
       }
     }

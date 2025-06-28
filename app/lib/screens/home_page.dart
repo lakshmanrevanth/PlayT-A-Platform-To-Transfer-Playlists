@@ -3,7 +3,8 @@ import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  late String username;
+  HomePage({required username, super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            SpotifyAuth();
+            SpotifyAuth(widget.username);
           },
           child: Text("Select Source"),
         ),
